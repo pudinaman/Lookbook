@@ -12,7 +12,7 @@ const Sidebar = ({ onSelectCategory }) => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await axios.get("http://localhost:4000/api/products/all");
+        const res = await axios.get("https://uae-project-1.onrender.com/api/products/all");
         const products = res.data;
 
         const grouped = {};
