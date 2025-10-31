@@ -33,7 +33,7 @@ export async function fetchAllProducts() {
           : null,
     }));
 
-    console.log("✅ Sample product with fixed URLs:", fixed[0]);
+    console.log("✅ Sample product with fixed URLs:", fixed[1]);
     return fixed;
   } catch (err) {
     console.error("fetchAllProducts error:", err);

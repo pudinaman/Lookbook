@@ -3,6 +3,7 @@ import useProducts from "./hooks/useProducts";
 import LookbookGrid from "./components/LookbookGrid";
 import EnquiryModal from "./components/EnquiryModal";
 import { Toaster } from "react-hot-toast";
+import logo from "./assets/logo.png";
 
 
 export default function App() {
@@ -35,10 +36,16 @@ export default function App() {
   
 
   return (
-    <div className="min-h-screen bg-white p-6 lg:p-12">
+    <div className="min-h-screen bg-[#192E40] p-6 lg:p-12">
       <header className="max-w-6xl mx-auto">
-        <h1 className="text-4xl font-bold text-gray-900 text-center">New Era</h1>
-        <p className="text-gray-600 mt-2 text-center">
+         <div className="flex justify-center">
+    <img 
+      src={logo} 
+      alt="Brand Logo" 
+      className="h-40 w-auto object-contain"
+    />
+  </div>
+        <p className="text-gray-100 mt-2 text-center">
           Browse this season's collection. Click any item to enquire.
         </p>
       </header>

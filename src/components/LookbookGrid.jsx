@@ -1,137 +1,122 @@
-import { useState, useMemo } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import CategoryHeader from './CategoryHeader'
-import ProductCard from './ProductCard'
-import { ChevronDown, ChevronRight } from 'lucide-react'
+import { useState, useMemo } from "react";
+import { motion } from "framer-motion";
+import CategoryHeader from "./CategoryHeader";
+import ProductCard from "./ProductCard";
 
 export default function LookbookGrid({ groups, onProductClick }) {
-  const [selectedCategory, setSelectedCategory] = useState(null)
-  const [selectedSubCategory, setSelectedSubCategory] = useState(null)
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedSubCategory, setSelectedSubCategory] = useState(null);
 
-  // Generate category → subcategory mapping
+  // Category → SubCategory mapping
   const sidebarData = useMemo(() => {
-    const map = {}
+    const map = {};
     Object.entries(groups || {}).forEach(([category, items]) => {
-      map[category] = [...new Set(items.map((p) => p.subCategory || 'Others'))]
-    })
-    return map
-  }, [groups])
+      map[category] = [...new Set(items.map((p) => p.subCategory || "Others"))];
+    });
+    return map;
+  }, [groups]);
 
-  // Filtered products
+  // Products filtering
   const filteredProducts = useMemo(() => {
-    if (!groups) return []
-    if (!selectedCategory) return Object.values(groups).flat()
-    let products = groups[selectedCategory] || []
+    if (!groups) return [];
+    if (!selectedCategory) return Object.values(groups).flat();
+
+    let products = groups[selectedCategory] || [];
     if (selectedSubCategory) {
-      products = products.filter((p) => p.subCategory === selectedSubCategory)
+      products = products.filter((p) => p.subCategory === selectedSubCategory);
     }
-    return products
-  }, [groups, selectedCategory, selectedSubCategory])
+    return products;
+  }, [groups, selectedCategory, selectedSubCategory]);
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 px-4 md:px-8 py-6">
-      {/* Sidebar */}
-      <aside className="w-full lg:w-64 bg-white rounded-2xl shadow-md border border-gray-100 h-fit p-5">
-        <h2 className="text-2xl font-bold mb-4 text-gray-800 tracking-tight border-b pb-2">
-          Categories
-        </h2>
-        <ul className="space-y-3">
-          {Object.entries(sidebarData).map(([category, subs]) => (
-            <li key={category} className="border-b border-gray-100 pb-2">
-              <button
-                onClick={() =>
-                  setSelectedCategory(
-                    selectedCategory === category ? null : category
-                  )
-                }
-                className={`flex justify-between items-center w-full text-base font-medium transition-colors duration-200 ${
-                  selectedCategory === category
-                    ? 'text-blue-600'
-                    : 'text-gray-700 hover:text-blue-500'
-                }`}
-              >
-                {category}
-                <motion.span
-                  animate={{ rotate: selectedCategory === category ? 90 : 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <ChevronRight size={18} />
-                </motion.span>
-              </button>
+    <div className="flex flex-col gap-8 px-4 md:px-8 py-6"
+         style={{ backgroundColor: "#192E40" }}  // ✅ Your new background
+    >
 
-              <AnimatePresence>
-                {selectedCategory === category && (
-                  <motion.ul
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.25 }}
-                    className="pl-4 mt-2 space-y-1 overflow-hidden"
-                  >
-                    {subs.map((sub) => (
-                      <li key={sub}>
-                        <button
-                          onClick={() =>
-                            setSelectedSubCategory(
-                              selectedSubCategory === sub ? null : sub
-                            )
-                          }
-                          className={`text-sm rounded-md px-2 py-1 transition-all duration-200 ${
-                            selectedSubCategory === sub
-                              ? 'bg-blue-50 text-blue-600 font-semibold'
-                              : 'text-gray-600 hover:text-blue-500'
-                          }`}
-                        >
-                          {sub}
-                        </button>
-                      </li>
-                    ))}
-                  </motion.ul>
-                )}
-              </AnimatePresence>
-            </li>
-          ))}
-        </ul>
-      </aside>
-
-      {/* Main Product Display */}
-      <main className="flex-1">
-        <div className="flex justify-between items-center mb-6">
-          <CategoryHeader
-            name={selectedSubCategory || selectedCategory || 'All Products'}
-          />
-          {(selectedCategory || selectedSubCategory) && (
-            <button
-              onClick={() => {
-                setSelectedCategory(null)
-                setSelectedSubCategory(null)
-              }}
-              className="text-sm text-gray-500 hover:text-blue-600 transition"
-            >
-              Clear Filters ✕
-            </button>
-          )}
-        </div>
-
-        {filteredProducts.length === 0 ? (
-          <p className="text-gray-500 mt-10 text-center text-lg">
-            No products found in this category.
-          </p>
-        ) : (
-          <motion.div
-            layout
-            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6"
+      {/* ✅ TOP CATEGORY BAR */}
+      <div className="w-full flex flex-wrap gap-3 justify-center">
+        {Object.keys(groups).map((cat) => (
+          <button
+            key={cat}
+            onClick={() => {
+              setSelectedCategory(selectedCategory === cat ? null : cat);
+              setSelectedSubCategory(null);
+            }}
+            className={`px-4 py-2 rounded-full text-sm transition-all border backdrop-blur-md
+              ${
+                selectedCategory === cat
+                  ? "bg-blue-600 text-white border-blue-400"
+                  : "text-gray-200 border-gray-600 hover:bg-white/10"
+              }`}
           >
-            {filteredProducts.map((p) => (
-              <ProductCard
-                key={p._id || p.id || Math.random()}
-                product={p}
-                onClick={onProductClick}
-              />
-            ))}
-          </motion.div>
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      {/* ✅ SUBCATEGORY BAR */}
+      {selectedCategory && (
+        <div className="w-full flex flex-wrap gap-2 justify-center mt-2">
+          {sidebarData[selectedCategory].map((sub) => (
+            <button
+              key={sub}
+              onClick={() =>
+                setSelectedSubCategory(
+                  selectedSubCategory === sub ? null : sub
+                )
+              }
+              className={`px-3 py-1 rounded-full text-sm transition-all 
+                ${
+                  selectedSubCategory === sub
+                    ? "bg-blue-400 text-white"
+                    : "bg-white/10 text-gray-200 hover:bg-white/20"
+                }`}
+            >
+              {sub}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* ✅ HEADER + CLEAR BUTTON */}
+      <div className="flex justify-between items-center mb-6 mt-2">
+        <CategoryHeader
+          name={selectedSubCategory || selectedCategory || "All Products"}
+          className="text-white"
+        />
+
+        {(selectedCategory || selectedSubCategory) && (
+          <button
+            onClick={() => {
+              setSelectedCategory(null);
+              setSelectedSubCategory(null);
+            }}
+            className="text-sm text-gray-300 hover:text-blue-300 transition"
+          >
+            Clear Filters ✕
+          </button>
         )}
-      </main>
+      </div>
+
+      {/* ✅ PRODUCT GRID */}
+      {filteredProducts.length === 0 ? (
+        <p className="text-gray-300 mt-10 text-center text-lg">
+          No products found in this category.
+        </p>
+      ) : (
+        <motion.div
+          layout
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+        >
+          {filteredProducts.map((p) => (
+            <ProductCard
+              key={p._id || p.id || Math.random()}
+              product={p}
+              onClick={onProductClick}
+            />
+          ))}
+        </motion.div>
+      )}
     </div>
-  )
+  );
 }

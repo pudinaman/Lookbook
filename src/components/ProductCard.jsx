@@ -12,19 +12,29 @@ export default function ProductCard({ product, onClick }) {
   return (
     <motion.div
       layout
-      whileHover={{ scale: 1.03 }}
-      // Updated with softer radius, refined shadows, and a clearer border
-      className="cursor-pointer bg-white rounded-3xl shadow-md hover:shadow-xl transition-shadow duration-300 border border-gray-200 overflow-hidden group"
-      onClick={() => {
-      console.log("Clicked:", product?.name); // ✅ ADD THIS LINE
-      onClick?.(product);
-  }}
+      whileHover={{ scale: 1.04 }}
+      className="
+        cursor-pointer 
+        rounded-3xl 
+        overflow-hidden 
+
+        /* ✅ GLASS EFFECT */
+        bg-white/10 
+        backdrop-blur-xl 
+        border border-white/20 
+
+        /* ✅ Subtle shadow + hover glow */
+        shadow-[0_4px_20px_rgba(0,0,0,0.3)]
+        hover:shadow-[0_8px_30px_rgba(255,255,255,0.12)]
+        transition-all duration-300
+      "
+      onClick={() => onClick?.(product)}
     >
-      <div className="aspect-[3/4] w-full bg-gray-100 overflow-hidden">
+      {/* Image */}
+      <div className="aspect-[3/4] w-full bg-black/20">
         <img
           src={imageUrl}
           alt={product?.images?.[0]?.altText || product?.name || "Product"}
-          // Added transition for a smooth zoom effect on hover
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           loading="lazy"
           onError={(e) => {
@@ -34,18 +44,18 @@ export default function ProductCard({ product, onClick }) {
         />
       </div>
 
-      {/* Increased padding and adjusted text styles for better hierarchy */}
+      {/* Text section – switched to lighter colors for dark theme */}
       <div className="p-4">
-        <h3 className="text-base font-semibold text-gray-900 truncate capitalize">
+        <h3 className="text-base font-semibold text-white truncate capitalize">
           {product?.name || "Unnamed Product"}
         </h3>
-        <p className="text-xs text-gray-500 mt-1">
+
+        <p className="text-xs text-gray-300 mt-1">
           {product?.category || "General"}
           {product?.subCategory && ` • ${product.subCategory}`}
         </p>
-        <p className="text-lg font-bold text-gray-900 mt-2">
-          AED {product?.additionalInfo?.price || product?.basePrice || "—"}
-        </p>
+
+        
       </div>
     </motion.div>
   );
