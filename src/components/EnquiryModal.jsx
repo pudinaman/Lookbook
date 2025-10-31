@@ -54,7 +54,7 @@ export default function EnquiryModal({
           {/* ✅ Custom SVG Close Button */}
           <button
             onClick={onClose}
-            className="absolute top-3 right-3 p-1 rounded-full bg-black/30 hover:bg-black/50 transition"
+            className="absolute top-3 right-3 p-1 rounded-full bg-black/30 hover:bg-black/50 transition cursor-pointer "
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
