@@ -4,6 +4,7 @@ import LookbookGrid from "./components/LookbookGrid";
 import EnquiryModal from "./components/EnquiryModal";
 import { Toaster } from "react-hot-toast";
 import logo from "./assets/logo.png";
+import Loader from "./components/Loader";
 
 
 export default function App() {
@@ -51,7 +52,7 @@ export default function App() {
       </header>
 
       <main className="max-w-6xl mx-auto mt-8">
-        {loading && <div>Loading products...</div>}
+        {loading && <div><Loader/></div>}
 
         {error && (
           <div className="text-red-600">
