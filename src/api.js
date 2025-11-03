@@ -2,15 +2,16 @@ import axios from 'axios'
 
 
 // Configure these
-export const PRODUCTS_API_BASE = import.meta.env.VITE_PRODUCTS_API_BASE || 'http://localhost:4000'
-export const BACKEND_API_BASE = import.meta.env.VITE_BACKEND_API_BASE || 'http://localhost:4000'
+export const PRODUCTS_API_BASE = import.meta.env.VITE_PRODUCTS_API_BASE || 'https://uae-project-1.onrender.com'
+export const BACKEND_API_BASE = import.meta.env.VITE_BACKEND_API_BASE || 'https://uae-project-1.onrender.com'
 
 
 export async function fetchAllProducts() {
   try {
     const res = await axios.get(`${PRODUCTS_API_BASE}/api/products/all`);
     const data = res.data?.data?.products || res.data || [];
-
+    console.log(`✅ Fetched ${data.length} products from API`);
+    console.log("✅ Sample product from API:", data);
     const fixed = data.map((p) => ({
       ...p,
       images: (p.images || []).map((img) => ({
